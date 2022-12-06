@@ -28,13 +28,6 @@ public class RubyController : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
 
         currentHealth = maxHealth;
-
-        if (isInvincible)
-        {
-            invicibleTimer -= Time.deltaTime;
-            if (invicibleTimer < 0)
-                isInvincible = false;
-        }
     }
 
     // Update is called once per frame
@@ -42,6 +35,14 @@ public class RubyController : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+
+
+        if (isInvincible)
+        {
+            invicibleTimer -= Time.deltaTime;
+            if (invicibleTimer < 0)
+                isInvincible = false;
+        }
     }
 
     void FixedUpdate()
@@ -55,6 +56,14 @@ public class RubyController : MonoBehaviour
 
     public void ChangeHealth(int amount)
     {
+        if (amount < 0)
+        {
+            if (isInvincible)
+                return;
+
+            isInvincible = true;
+            invicibleTimer = timeInvicible;
+        }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         Debug.Log(currentHealth + "/" + maxHealth);
